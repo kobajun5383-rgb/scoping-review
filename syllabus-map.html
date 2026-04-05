@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>シラバス×YouTube×書籍 マッピング | R08年度</title>
+<style>
+  :root {
+    --bio-color: #2e7d32;
+    --bio-light: #e8f5e9;
+    --bio-mid: #a5d6a7;
+    --info-color: #1565c0;
+    --info-light: #e3f2fd;
+    --info-mid: #90caf9;
+    --youtube-color: #d32f2f;
+    --book-color: #6a1b9a;
+    --teach-color: #e65100;
+    --gray: #757575;
+    --bg: #fafafa;
+    --card-bg: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: #333;
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 12px 40px;
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 20px 0 6px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #1a237e 0%, #4a148c 100%);
+    color: #fff;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--gray);
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  .toc-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.1);
+  }
+  .toc-card h2 { font-size: 14px; color: var(--gray); margin-bottom: 10px; }
+  .toc-section { margin-bottom: 10px; }
+  .toc-section h3 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .toc-bio h3 { color: var(--bio-color); }
+  .toc-info h3 { color: var(--info-color); }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+  .toc-grid a {
+    font-size: 12px;
+    color: inherit;
+    text-decoration: none;
+    padding: 4px 6px;
+    border-radius: 6px;
+    display: block;
+  }
+  .toc-bio .toc-grid a { background: var(--bio-light); color: var(--bio-color); }
+  .toc-info .toc-grid a { background: var(--info-light); color: var(--info-color); }
+  .toc-grid a:hover { filter: brightness(0.93); }
+
+  /* Lesson card */
+  details {
+    background: var(--card-bg);
+    border-radius: 10px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.1);
+    overflow: hidden;
+  }
+  summary {
+    cursor: pointer;
+    padding: 14px 16px;
+    font-weight: 700;
+    font-size: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    list-style: none;
+    user-select: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  .summary-arrow {
+    font-size: 12px;
+    margin-top: 3px;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  details[open] .summary-arrow { transform: rotate(90deg); }
+  .summary-body { flex: 1; }
+  .summary-date {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.75;
+    display: block;
+    margin-top: 2px;
+  }
+  .bio-header { background: var(--bio-light); border-left: 4px solid var(--bio-color); }
+  .info-header { background: var(--info-light); border-left: 4px solid var(--info-color); }
+
+  .lesson-body { padding: 0 16px 16px; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 20px;
+    display: inline-block;
+    margin: 12px 0 8px;
+  }
+  .label-teach { background: #fff3e0; color: var(--teach-color); }
+  .label-yt { background: #ffebee; color: var(--youtube-color); }
+  .label-book { background: #f3e5f5; color: var(--book-color); }
+
+  .teach-box {
+    background: #fff8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px;
+    border-left: 3px solid #ffb74d;
+  }
+  .teach-box p { margin-bottom: 8px; }
+  .teach-box p:last-child { margin-bottom: 0; }
+  .teach-box ul { padding-left: 18px; }
+  .teach-box li { margin-bottom: 4px; }
+  .teach-box strong { color: var(--teach-color); }
+
+  .yt-card {
+    background: #fff5f5;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-left: 3px solid var(--youtube-color);
+  }
+  .yt-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #c62828;
+    margin-bottom: 6px;
+  }
+  .yt-title a { color: inherit; text-decoration: none; }
+  .yt-title a:hover { text-decoration: underline; }
+  .yt-usage {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 6px;
+  }
+  .ts-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+  .ts-chip {
+    font-size: 12px;
+    background: #ffcdd2;
+    color: #c62828;
+    border-radius: 20px;
+    padding: 3px 9px;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .ts-chip:hover { background: #ef9a9a; }
+  .ts-chip .ts-time { font-weight: 700; }
+
+  .book-card {
+    background: #fdf4ff;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-left: 3px solid var(--book-color);
+  }
+  .book-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--book-color);
+    margin-bottom: 4px;
+  }
+  .book-concept {
+    font-size: 13px;
+    font-weight: 700;
+    color: #4a148c;
+    margin-bottom: 4px;
+  }
+  .book-page {
+    font-size: 11px;
+    color: var(--gray);
+    margin-bottom: 4px;
+  }
+  .book-quote {
+    font-size: 13px;
+    color: #444;
+    background: rgba(106,27,154,.06);
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin-bottom: 5px;
+    line-height: 1.6;
+  }
+  .book-usage {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+  }
+
+  .no-item { font-size: 13px; color: var(--gray); font-style: italic; margin: 6px 0; }
+  .pc-badge {
+    display: inline-block;
+    font-size: 11px;
+    background: #e8eaf6;
+    color: #3949ab;
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin-left: 6px;
+    font-weight: 600;
+  }
+  hr.divider { border: none; border-top: 1px solid #eee; margin: 12px 0; }
+</style>
+</head>
+<body>
+
+<h1>シラバス × YouTube × 書籍<br>授業マッピング R08年度</h1>
+<p class="subtitle">生物基礎（日曜12回）+ 情報I（日曜6回）｜Claude Code 自律分析</p>
+
+<!-- TOC -->
+<div class="toc-card">
+  <h2>目次</h2>
+  <div class="toc-section toc-bio">
+    <h3>🌿 生物基礎（12回）</h3>
+    <div class="toc-grid">
+      <a href="#bio1">第1回 5/10 生物の特徴</a>
+      <a href="#bio2">第2回 5/24 生物とエネルギー</a>
+      <a href="#bio4">第4回 6/21 遺伝子・DNA</a>
+      <a href="#bio5">第5回 7/5 遺伝情報とタンパク質</a>
+      <a href="#bio6">第6回 7/19 体内環境・自律神経</a>
+      <a href="#bio7">第7回 7/26 内分泌系</a>
+      <a href="#bio8">第8回 10/11 免疫のはたらき</a>
+      <a href="#bio10">第10回 10/25 免疫と医療</a>
+      <a href="#bio11">第11回 11/15 植生と遷移</a>
+      <a href="#bio12">第12回 11/29 バイオーム</a>
+      <a href="#bio13">第13回 12/13 生物の多様性</a>
+      <a href="#bio14">第14回 1/10 生態系の保全</a>
+    </div>
+  </div>
+  <div class="toc-section toc-info">
+    <h3>💻 情報I（6回）</h3>
+    <div class="toc-grid">
+      <a href="#info1">第1回 4/26 導入・メディア</a>
+      <a href="#info2">第2回 6/7 権利と責任</a>
+      <a href="#info4">第4回 8/23 情報を伝える</a>
+      <a href="#info5">第5回 10/18 アルゴリズム PC実習</a>
+      <a href="#info7">第7回 11/29 データ活用・まとめ</a>
+      <a href="#info8">第8回 12/20 散布図・分析 PC実習</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BIO LESSONS ===== -->
+
+<!-- Bio 1 -->
+<details id="bio1">
+  <summary class="bio-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      🌿 第1回 — ガイダンス・生物の特徴
+      <span class="summary-date">5月10日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「知性なき知性」で1年間を釣る</strong></p>
+      <p>粘菌が鉄道網を設計できた、ということを最初の5分で見せる。脳も神経もない単細胞生物が人間の都市計画を超えた——この衝撃でその後のすべての授業の「生物とは何か」という問いへの入口を作る。</p>
+      <ul>
+        <li>生物の定義（細胞・代謝・恒常性・応答・生殖）を「なぜ粘菌は生物なのか」で確認</li>
+        <li>収斂進化の概念：タコとヒトの眼が同じ構造に独立進化した事実で「解の収斂」を示す</li>
+        <li>「科学者が常識を疑った話」として、エディアカラ化石を無視した指導教授の話を添える</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=GUamA8XOQN8" target="_blank">粘菌と鉄道会社。より良い路線図を作れるのはどっち？ #94</a></div>
+      <div class="yt-usage">🎯 生物の「知性なき問題解決」として導入に最適。単細胞なのに最適解を出すという驚き。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=GUamA8XOQN8&t=38" target="_blank"><span class="ts-time">0:38</span> 関東鉄道網設計実験</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=GUamA8XOQN8&t=197" target="_blank"><span class="ts-time">3:17</span> 光と最短経路の選択</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=-oqeEH0mGmc" target="_blank">ヒルは木から落ちる？小学生が俗説を打破した物語 #98</a></div>
+      <div class="yt-usage">🎯 科学的思考の導入。「証拠のある主張」と「なんとなくそう思う」の違いを体感させる。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=-oqeEH0mGmc&t=30" target="_blank"><span class="ts-time">0:30</span> 俗説の検証</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=-oqeEH0mGmc&t=297" target="_blank"><span class="ts-time">4:57</span> 子供の科学実践</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=4TtHxJbxu9Y" target="_blank">蝶、アホすぎる。ピンポン玉に求婚してる。#100</a></div>
+      <div class="yt-usage">🎯 行動生態学の入口。生物の「意外な行動」の面白さを伝えつつ、本能と学習の話へ。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=4TtHxJbxu9Y&t=400" target="_blank"><span class="ts-time">6:40</span> 蝶の求愛3パターン</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=4TtHxJbxu9Y&t=1330" target="_blank"><span class="ts-time">22:10</span> モーガンの法則による解釈</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">目の誕生（アンドリュー・パーカー）</div>
+      <div class="book-concept">収斂進化：コウイカの眼とヒトの眼</div>
+      <div class="book-page">第1章 pp.19-24</div>
+      <div class="book-quote">コウイカとヒトの眼は構造的によく似ているが、両者はまったく異なる動物門に属し、眼を独立に進化させた。体内の体制（内部構造）は収斂しないが、外部形態は同じ環境の要求に応えて似た形状に収斂する。</div>
+      <div class="book-usage">「イカとヒトの眼は別々に進化したが、ほぼ同じ構造になった」——進化の必然性を語る導入として使える</div>
+    </div>
+    <div class="book-card">
+      <div class="book-title">目の誕生</div>
+      <div class="book-concept">エディアカラ動物群の謎：「常識」が発見を葬りかけた</div>
+      <div class="book-page">第1章 pp.39-44</div>
+      <div class="book-quote">スプリッグの指導教授は「先カンブリア時代に化石などあるはずがない」という当時の「常識」を信じて標本を無視した。しかしスプリッグは化石を守り抜いた。科学において「常識」が重要な発見を葬りかけた典型例。</div>
+      <div class="book-usage">「権威が『そんなはずない』と言っても、証拠があれば正しいと主張し続けることが大切」——科学的態度を教える事例として</div>
+    </div>
+  </div>
+</details>
+
+<!-- Bio 2 -->
+<details id="bio2">
+  <summary class="bio-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      🌿 第2回 — 生物とエネルギー
+      <span class="summary-date">5月24日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「なぜ世界は緑で覆い尽くされないのか？」という問いで始める</strong></p>
+      <p>植物は光合成でどんどん増えられるはずなのに、地球が植物で埋め尽くされていない。この謎を「緑の世界仮説」で解き明かしながら、光合成（ATP生産）→食物連鎖のエネルギー流→恒常性のエネルギーコストという流れをつなげる。</p>
+      <ul>
+        <li>ATP＝エネルギー通貨。「細胞内の電子マネー」という比喩で量子化・デジタル化とも繋がる</li>
+        <li>光合成と呼吸の逆反応という対称性——どちらも電子の移動</li>
+        <li>「洞窟魚が眼を失った理由は維持コストが高いから」——眼はエネルギーコストの高い器官</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=aHBbdXReFpA" target="_blank">なぜ植物は食い尽くされないのか？【緑の世界仮説】</a></div>
+      <div class="yt-usage">🎯 食物連鎖のエネルギー流と上位捕食者の役割を鮮やかに説明。「草食動物の数を肉食動物が制御する」という驚きの逆転。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=aHBbdXReFpA&t=0" target="_blank"><span class="ts-time">0:00</span> ダーウィンと資源仮説</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=aHBbdXReFpA&t=100" target="_blank"><span class="ts-time">1:40</span> 緑の世界仮説・生態ピラミッド</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">目の誕生</div>
+      <div class="book-concept">洞窟魚の退行的進化——眼はコストが高い器官</div>
+      <div class="book-page">第4章 pp.179-184</div>
+      <div class="book-quote">メキシカンテトラは洞窟の奥へ移住するにつれて眼が退化した。眼は維持コストが非常に高いため、不要になるとすぐに「手放される」。</div>
+      <div class="book-usage">「使わない高性能スマホのプランを解約するようなもの」——生存に不要な器官を維持するコストは馬鹿にならない。ATPのコストという文脈で使える</div>
+    </div>
+  </div>
+</details>
+
+<!-- Bio 4 -->
+<details id="bio4">
+  <summary class="bio-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      🌿 第4回 — 遺伝子・遺伝情報とDNA
+      <span class="summary-date">6月21日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「設計図はすでにあった——引き金だけが足りなかった」</strong></p>
+      <p>カンブリア紀の爆発の話をDNAと絡める。38の動物門のボディプランが先カンブリア時代にすでに完成していたのに、外部形態が爆発したのはわずか500万年。「設計図（DNA）はあるのに、発現スイッチが入らなかった」という構造で遺伝子発現を導入する。</p>
+      <ul>
+        <li>DNAの二重らせん構造と塩基対——「情報のデジタル化」との接続（4文字コード）</li>
+        <li>植物の世代交代（一倍体・二倍体）で染色体数の変化を視覚化</li>
+        <li>コケが1倍体を本体とする逆転の仕組みは記憶に残る</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=KrB9Gw4Q4OA" target="_blank">植物を人体にたとえよう！【キンタマ発生装置】#108</a></div>
+      <div class="yt-usage">🎯 植物の生殖（花粉→精子・めしべ→卵巣）を人体で例える大胆な授業アプローチ。種子植物・シダ・コケの違いが記憶に残る。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=KrB9Gw4Q4OA&t=0" target="_blank"><span class="ts-time">0:00</span> 植物の分類と生殖の違い</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=KrB9Gw4Q4OA&t=324" target="_blank"><span class="ts-time">5:24</span> 花粉＝精子の例え</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=a5t01PgK6Jk" target="_blank">コケはキンタマでした。#109</a></div>
+      <div class="yt-usage">🎯 一倍体・二倍体の世代交代。コケが「逆転した生き物」であることで染色体数の変化が記憶に残る。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=a5t01PgK6Jk&t=0" target="_blank"><span class="ts-time">0:00</span> 苔・シダ・種子植物のサイクル</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=a5t01PgK6Jk&t=205" target="_blank"><span class="ts-time">3:25</span> 世代交代と倍数体</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">目の誕生</div>
+      <div class="book-concept">カンブリア紀の爆発：設計図は先にあった</div>
+      <div class="book-page">第1章 pp.28-29, 57-60</div>
+      <div class="book-quote">正確には「5億4300万年前から5億3800万年前のわずか500万年間に、すでに存在していた全動物門が突如として硬い殻（外部形態）を獲得した」出来事。体内の体制（内部構造）は先カンブリア時代に既に出そろっていた。</div>
+      <div class="book-usage">「設計図は既にできていたのに、なぜか急に建設が始まった」——遺伝子の発現スイッチの概念の比喩として</div>
+    </div>
+  </div>
+</details>
+
+<!-- Bio 5 -->
+<details id="bio5">
+  <summary class="bio-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      🌿 第5回 — 遺伝情報とタンパク質
+      <span class="summary-date">7月5日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「タンパク質＝折り紙ロボット」で転写・翻訳を語る</strong></p>
+      <p>DNAはただの設計図。実際に仕事をするのはタンパク質＝折り紙ロボット。折り方（アミノ酸配列）が決まると形が決まり、形が決まると機能が決まる。この「配列→構造→機能」の連鎖がセントラルドグマの本質。</p>
+      <ul>
+        <li>転写（DNA→mRNA）：設計図をコピーする工程。コピー機でなくてもよい——「写す」のがポイント</li>
+        <li>翻訳（mRNA→タンパク質）：ロボットが設計図を読みながら部品を組み立てる工程</li>
+        <li>「眼の5タイプが独立に進化した」——同じ機能でもアミノ酸配列が違うことがある（収斂）</li>
+        <li>酵素は触媒タンパク質——一回使っても壊れない「仕事道具」というイメージ</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=K0kv-sxWLW0" target="_blank">ハエは19世紀末、いきなり害虫になった。#91</a></div>
+      <div class="yt-usage">🎯 少し横道だが「害虫」という概念が社会的に構築されたものという話は、タンパク質の「機能」も文脈依存であるという発想と繋がる。生物の多様性への見方を変える。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=K0kv-sxWLW0&t=0" target="_blank"><span class="ts-time">0:00</span> 導入・害虫の誕生</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=K0kv-sxWLW0&t=360" target="_blank"><span class="ts-time">6:00</span> 明治期の害虫概念の誕生</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=K0kv-sxWLW0&t=1080" target="_blank"><span class="ts-time">18:00</span> ハエと衛生運動</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">目の誕生</div>
+      <div class="book-concept">眼の5タイプ：同じ「像を結ぶ」を複数の設計で実現</div>
+      <div class="book-page">第7章 pp.240-249</div>
+      <div class="book-quote">眼には大きく分けて5つの設計原理がある。①ピット眼②ピンホール眼③レンズ眼（カメラ眼）④反射鏡眼（ホタテ貝）⑤複眼（節足動物）。「像を結ぶ」という同じ機能を全く異なるタンパク質・構造で実現している。</div>
+      <div class="book-usage">「同じ機能でも実装方法は複数ある」——タンパク質の構造多様性と機能の収斂を伝える事例</div>
+    </div>
+  </div>
+</details>
+
+<!-- Bio 6 -->
+<details id="bio6">
+  <summary class="bio-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      🌿 第6回 — ヒトの体の調節（体内環境・自律神経）
+      <span class="summary-date">7月19日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「体はスマート恒温器——常に微調整している」</strong></p>
+      <p>現代のスマート家電が室温を一定に保つ仕組み（センサー→判断→アクター）と体内環境維持を対比させる。自律神経の交感・副交感の拮抗作用は「アクセルとブレーキ」、フィードバック回路は「オートパイロット」。</p>
+      <ul>
+        <li>体液の成分（血漿・組織液・リンパ）——「細胞の海」の概念</li>
+        <li>自律神経系：脳の命令なしに動く——「AIに例えるとルールベースの自動制御」</li>
+        <li>体温調節の仕組み：皮膚の血管拡張・縮小、汗腺の活性化。夏の暑さと冬の寒さの対比</li>
+        <li>血糖値調節と膵臓（次回の内分泌系への橋渡し）</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="no-item">この回に直接対応するゆる生態学ラジオ動画は現時点でなし。</div>
+    <div class="yt-card">
+      <div class="yt-title">※「はたらく細胞」アニメ活用推奨</div>
+      <div class="yt-usage">🎯 白血球（好中球・マクロファージ）の活躍を自律神経系のはたらきと絡めると印象に残る。血管拡張シーンは体内環境の実感に最適。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/results?search_query=%E3%81%AF%E3%81%9F%E3%82%89%E3%81%8F%E7%B4%B0%E8%83%9E+%E8%87%AA%E5%BE%8B%E7%A5%9E%E7%B5%8C" target="_blank">検索: はたらく細胞 自律神経</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">目の誕生</div>
+      <div class="book-concept">銀色の体色が持つ光学的トリック</div>
+      <div class="book-page">第4章 pp.178-181</div>
+      <div class="book-quote">銀色の体表が背景の光を反射するため、その方向から見ると魚が「見えない」状態になる。これは多層膜が青・緑・赤の各色を同一方向に反射して白色（銀色）に見せる構造色。</div>
+      <div class="book-usage">体内環境の「恒常性」と光学的偽装の「環境への適応」を対比させながら、「どちらも状態を一定に保とうとする仕組み」という視点で繋げられる</div>
+    </div>
+  </div>
+</details>
+
+<!-- Bio 7 -->
+<details id="bio7">
+  <summary class="bio-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      🌿 第7回 — 内分泌系による調節
+      <span class="summary-date">7月26日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「ホルモンは血中の手紙——速度と持続時間が違う」</strong></p>
+      <p>自律神経（電話：速い・局所的）とホルモン（郵便：遅い・広域的・長続き）の違いで内分泌系の特徴を整理。血糖値調節を「インスリンとグルカゴンの天秤」で視覚化する。</p>
+      <ul>
+        <li>フィードバック機構の負のフィードバック——甲状腺ホルモンの調節を例に</li>
+        <li>ストレスと副腎——コルチゾール・アドレナリン。「試験前に緊張する仕組み」という実感</li>
+        <li>「体色を湿度で変えるヘラクレスオオカブト」——化学信号（ホルモン）ではなく物理的変化だが、「状態に応じて反応する」という構造は同じ</li>
+        <li>糖尿病との繋がり：インスリンの発見（1921年）はノーベル賞——科学史ネタ</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="no-item">この回に直接対応する動画はなし。「はたらく細胞」血小板・血糖値調節エピソードを推奨。</div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">目の誕生</div>
+      <div class="book-concept">ヘラクレスオオカブトムシの湿度で変わる体色</div>
+      <div class="book-page">第3章 pp.151-154</div>
+      <div class="book-quote">ヘラクレスオオカブトムシの鞘翅は湿度が低いと黄緑色に輝き、湿度が高いと黒くなる。色素が変化しているのではなく、微細構造の中の「空気か水か」という違いだけで色が劇的に変わる。</div>
+      <div class="book-usage">「液晶温度計のおもちゃ（手で触ると色が変わる）と同じ原理が自然界にある」——環境変化に応じた体の反応という内分泌の教えと並べて話せる</div>
+    </div>
+  </div>
+</details>
+
+<!-- Bio 8 -->
+<details id="bio8">
+  <summary class="bio-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      🌿 第8回 — 免疫のはたらき
+      <span class="summary-date">10月11日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「はたらく細胞」を使い倒す——免疫は「記憶する戦争」</strong></p>
+      <p>自然免疫と獲得免疫の二段構えを「城の外堀（自然免疫）と精鋭部隊（獲得免疫）」で比喩。T細胞・B細胞・抗体の役割をアニメで確認しながら、「なぜインフルエンザには毎年罹るのか」「なぜ水痘は二度罹らないのか」という問いで記憶免疫の意味を実感させる。</p>
+      <ul>
+        <li>自然免疫：非特異的・速い（初動部隊）——食細胞・NK細胞</li>
+        <li>獲得免疫：特異的・遅い・記憶する（精鋭部隊）——T細胞・B細胞・抗体</li>
+        <li>樹状細胞：橋渡し役（「メンフクロウの赤ちゃんが草原を走るミーム」は引き続き要確認）</li>
+        <li>「サイバー攻撃の防御とよく似た構造」——ファイアウォール（自然免疫）とパターンマッチング（獲得免疫）</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="no-item">ゆる生態学ラジオには免疫回なし。「はたらく細胞」本編または解説動画を使用推奨。</div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">ボッコちゃん（星 新一）</div>
+      <div class="book-concept">「ボッコちゃん」——AIが感情を持たずに全員に同じ対応をした結果</div>
+      <div class="book-page">pp.14-19</div>
+      <div class="book-quote">バーに置かれた美しいロボット・ボッコちゃんは、客の言葉をそのまま繰り返すだけの存在。一人の男が本気で恋をし、ライバルの飲み物に毒を盛る。ボッコちゃんは気づかず客全員に出し続ける。</div>
+      <div class="book-usage">「免疫が自己と非自己を区別できなくなる（自己免疫疾患）」という話の導入として——「区別しないことの危険」という視点から</div>
+    </div>
+  </div>
+</details>
+
+<!-- Bio 10 -->
+<details id="bio10">
+  <summary class="bio-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      🌿 第10回 — 免疫と医療
+      <span class="summary-date">10月25日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「ワクチンは予行演習——本番前にリハーサルを積んでおく」</strong></p>
+      <p>記憶細胞の仕組みを「ワクチンが効く理由」として実感させる。mRNAワクチン（コロナ）を「設計図を見せるだけで体が対策を覚える」という画期的さで紹介する。アレルギーは「免疫の過剰反応」——味方の誤射。</p>
+      <ul>
+        <li>ワクチン：弱毒化・不活化・mRNA型。コロナで一気に普及したmRNA型の革命性</li>
+        <li>アレルギー：IgEと肥満細胞の連携。花粉症・食物アレルギーを例に</li>
+        <li>HIV/エイズ：T細胞（CD4+）を攻撃するウイルス。「武器を奪う攻撃」</li>
+        <li>免疫チェックポイント療法：本庶佑のノーベル賞（2018年）——がん治療の革命</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="no-item">この回に直接対応するゆる生態学ラジオ動画はなし。ノーベル賞解説動画や「はたらく細胞」を活用推奨。</div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">数理モデル思考で紐解くRULE DESIGN（江崎貴裕）</div>
+      <div class="book-concept">コブラ効果：対策が問題を悪化させた事例</div>
+      <div class="book-page">第2章 pp.52-55</div>
+      <div class="book-quote">インド植民地時代、コブラの死骸に報奨金を設定。人々が「コブラを飼育・繁殖させて報奨金を稼ぐ」ことに気づき、飼育を開始。さらに買い取りが打ち切られると飼育していたコブラを野に放ち、野生コブラは元より増加した。</div>
+      <div class="book-usage">免疫チェックポイント療法の「がん細胞が免疫にブレーキをかける仕組みを解除した」という話と並べて——「悪い仕組みを知って裏をかく」という構造が似ている</div>
+    </div>
+  </div>
+</details>
+
+<!-- Bio 11 -->
+<details id="bio11">
+  <summary class="bio-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      🌿 第11回 — 植生と遷移
+      <span class="summary-date">11月15日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「災害は生態系を豊かにする」という逆説で遷移を教える</strong></p>
+      <p>中規模攪乱仮説を「F1レースのリバースグリッド」で説明。適度な攪乱（台風・山火事・里山管理）が多様性を維持するメカニズムを、遷移の仕組みと絡めて理解させる。</p>
+      <ul>
+        <li>一次遷移：溶岩台地から始まる「ゼロからの建設」——コケ→草本→低木→高木</li>
+        <li>二次遷移：農地放棄後の回復——「リセットからの再建」、里山との関係</li>
+        <li>極相林：「最終的に残る最強の種だけが生き残る」——競争排除則との接続</li>
+        <li>中規模攪乱仮説：攪乱がなければ強い種だけ残り、多様性が下がる</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=m5rR5Dzobgw" target="_blank">災害は生物多様性を生み出す。</a></div>
+      <div class="yt-usage">🎯 中規模攪乱仮説のベスト動画。F1リバースグリッドの例えが鮮やか。里山との関係も説明。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=m5rR5Dzobgw&t=201" target="_blank"><span class="ts-time">3:21</span> 中規模攪乱仮説の概要</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=m5rR5Dzobgw&t=296" target="_blank"><span class="ts-time">4:56</span> F1レース・里山の事例</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=m5rR5Dzobgw&t=122" target="_blank"><span class="ts-time">2:02</span> 緑の世界仮説と上位捕食者</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">目の誕生</div>
+      <div class="book-concept">光量と種多様性の正比例——深海では種が少ない理由</div>
+      <div class="book-page">第4章 pp.155-174</div>
+      <div class="book-quote">スカベンジャーの種多様性は浅海域でもっとも高く、トラップを深い場所に設置するほど捕獲される種数が減少した。多様性を制限する最大の要因は「光の欠如」。</div>
+      <div class="book-usage">遷移の「極相→単純化」と並べて——「競争を経て最適解が残ったとき、多様性は失われる」という共通のロジックとして</div>
+    </div>
+  </div>
+</details>
+
+<!-- Bio 12 -->
+<details id="bio12">
+  <summary class="bio-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      🌿 第12回 — バイオーム
+      <span class="summary-date">11月29日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「気候がフォーマットを決め、生物がそれを埋める」</strong></p>
+      <p>気温と降水量という2軸でバイオームの分布が決まることを「気候がソフトウェアの仕様、生物がそれに合わせて実装する」と比喩。収斂進化の視点——サボテン（北米）とユーフォルビア（アフリカ）は全く別の系統なのに同じ形。</p>
+      <ul>
+        <li>バイオームの分布図：熱帯雨林→サバンナ→砂漠→地中海式→温帯林→タイガ→ツンドラ</li>
+        <li>日本のバイオーム：垂直分布（標高で変化）の話は身近で印象に残る</li>
+        <li>サワガニの分布が「意味不明」に見える——地質学的な過去を反映しているという視点</li>
+        <li>3億5000万年前と今で「同じ姿」の生き物（ベークトビーン貝虫）——生きた化石</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=cHBrsFzuVjY" target="_blank">サワガニの分布が意味不明すぎる…。</a></div>
+      <div class="yt-usage">🎯 サワガニの分布が現在の気候ではなく地質学的歴史を反映している——バイオームの「今だけでは語れない」視点を導入できる。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=cHBrsFzuVjY&t=4" target="_blank"><span class="ts-time">0:04</span> サワガニの謎の分布図</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=cHBrsFzuVjY&t=116" target="_blank"><span class="ts-time">1:56</span> サワガニの基本情報と種数</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">目の誕生</div>
+      <div class="book-concept">ベークトビーン——3億5000万年前と現代の「同一生物」</div>
+      <div class="book-page">第5章 pp.188-193</div>
+      <div class="book-quote">オーストラリア大陸棚の水深200メートルで採集された橙赤色の貝虫は、形態測定により3億5000万年前（シルル紀）の化石と数値がぴたりと一致した。漁師が「まずくて食えない」と呼ぶ見慣れない存在として知られていた。</div>
+      <div class="book-usage">「姿が変わらないのは環境が変わらないから？ それとも変わる必要がなかったから？」——バイオームの安定性と生物の応答の議論として</div>
+    </div>
+  </div>
+</details>
+
+<!-- Bio 13 -->
+<details id="bio13">
+  <summary class="bio-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      🌿 第13回 — 生態系と生物の多様性
+      <span class="summary-date">12月13日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「なぜ同じ場所に何十種もの生物がいられるのか？」——多様性の謎に正面から挑む</strong></p>
+      <p>ガウゼの競争排除則があるなら、同じニッチに複数種はいられないはず。なのに現実には多数の種が共存している——この「プランクトンのパラドックス」を入口に、ニッチの多次元性・中規模攪乱・繁殖干渉の概念を積み上げる。</p>
+      <ul>
+        <li>食物連鎖・食物網：単純なチェーンではなく複雑なウェブ</li>
+        <li>栄養段階と生態ピラミッド——エネルギーは10分の1に</li>
+        <li>種多様性の指標：種の数だけでなく均等性も重要</li>
+        <li>「ポケモンのルカリオはリカオンがモデルという説」——生物多様性は身近にある</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=3vNK3ZGc7kE" target="_blank">ビジネスにも役立つ「ガウゼの競争排除則」を、ボディビルで理解しよう！#118</a></div>
+      <div class="yt-usage">🎯 競争排除則をゴールドジムとチョコザップで説明。ニッチの概念を実感させる最高の入口。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=3vNK3ZGc7kE&t=930" target="_blank"><span class="ts-time">15:30</span> ガウゼの競争排除則・ゾウリムシ実験</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=3vNK3ZGc7kE&t=600" target="_blank"><span class="ts-time">10:00</span> ビジネスへの応用（ゴールドジム vs チョコザップ）</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=hGnTaGLlxRo" target="_blank">ハイエナがエサに困らない本当の理由 #120</a></div>
+      <div class="yt-usage">🎯 ハッチンソンの多次元ニッチ理論でなぜ多くの種が共存できるかを説明。生物多様性のパラドックスへの答え。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=hGnTaGLlxRo&t=760" target="_blank"><span class="ts-time">12:40</span> 生物多様性のパラドックスと事例</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=hGnTaGLlxRo&t=975" target="_blank"><span class="ts-time">16:15</span> ハッチンソンの超多角体ニッチ理論</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=m5rR5Dzobgw" target="_blank">災害は生物多様性を生み出す。</a></div>
+      <div class="yt-usage">🎯 中規模攪乱仮説で「なぜ競争排除が起きないか」をもう一段深掘り。繁殖干渉（タンポポ爆弾）も秀逸。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=m5rR5Dzobgw&t=916" target="_blank"><span class="ts-time">15:16</span> 繁殖干渉の発見（タンポポ爆弾）</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=4YQx7M04xzM" target="_blank">「ニッチ」の意味ミスってますよ。生態学上の意味は…？#117</a></div>
+      <div class="yt-usage">🎯 ニッチの語源（建築→経営→生態学）を辿る。生態学の言葉がビジネスに転用された経緯。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=4YQx7M04xzM&t=290" target="_blank"><span class="ts-time">4:50</span> ニッチの語源と生態学への転用</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=4YQx7M04xzM&t=498" target="_blank"><span class="ts-time">8:18</span> カリフォルニアスラッシャーのニッチ研究</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">目の誕生</div>
+      <div class="book-concept">生物発光の二つの用途——防犯灯と目くらまし</div>
+      <div class="book-page">第5章 pp.200-205</div>
+      <div class="book-quote">眼のない貝虫（ハロキプリダ類）は、群れで一斉に発光して「防犯灯」を作る。海面を明るく照らすことで捕食者が接近できなくなる。一方、日本産ウミホタルは個別に「目くらまし」を発して逃げる。同じ生物発光が全く逆の戦略に使われている。</div>
+      <div class="book-usage">「同じ手段（発光）でも使い方が違う」——生態系の中での多様な適応戦略を示す事例として</div>
+    </div>
+  </div>
+</details>
+
+<!-- Bio 14 -->
+<details id="bio14">
+  <summary class="bio-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      🌿 第14回 — 生態系の保全
+      <span class="summary-date">1月10日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「ウナギは今食べていいのか？」——エビデンスで考える保全の難しさ</strong></p>
+      <p>ウナギの減少問題を「消費者・漁業・環境変化・国際政治」の多面から考える。「答えが一つじゃない問題」を扱うことで、生態系保全の複雑さを実感させる。</p>
+      <ul>
+        <li>外来種問題：ブラックバス・ブルーギル・ミドリガメ——「悪いのは生物か人間か」</li>
+        <li>絶滅危惧種：レッドリストの意味と限界</li>
+        <li>生物多様性条約（CBD）とCOP——国際的な取り組みの現状</li>
+        <li>「星新一『おーいでてこーい』——底なし穴に捨てたゴミが空から降ってくる」——ツケの先送り</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=gvLwIKlHV4Q" target="_blank">ウナギ減ってるらしいけど、食べていいの？</a></div>
+      <div class="yt-usage">🎯 消費・環境変化・国際競争が絡む複雑な問題。「食べていいか悪いか」をエビデンスで考える訓練に最適。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=gvLwIKlHV4Q&t=320" target="_blank"><span class="ts-time">5:20</span> 過去50年の漁獲量推移</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=gvLwIKlHV4Q&t=620" target="_blank"><span class="ts-time">10:20</span> 減少理由の議論</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=gvLwIKlHV4Q&t=1140" target="_blank"><span class="ts-time">19:00</span> 国際的な消費動向</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=ArON1iJR6jI" target="_blank">ウナギが減った本当の理由は◯◯</a></div>
+      <div class="yt-usage">🎯 海流・ダム・気候変動が複合的に関与している事実。「単純な原因を探すな」というエビデンスリテラシーの授業に。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=ArON1iJR6jI&t=0" target="_blank"><span class="ts-time">0:00</span> 産卵・海流と稚魚の運命</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=ArON1iJR6jI&t=572" target="_blank"><span class="ts-time">9:32</span> 川でのダム問題</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=ArON1iJR6jI&t=965" target="_blank"><span class="ts-time">16:05</span> 人間活動・政策・今後の展望</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">ボッコちゃん（星 新一）</div>
+      <div class="book-concept">「おーいでてこーい」——底なし穴に捨てたゴミが空から降ってくる</div>
+      <div class="book-page">pp.20-26</div>
+      <div class="book-quote">台風で村に底なしの穴が出現。企業が廃棄物・放射性廃棄物を次々に投入。何年も後、高層ビル建設中、作業員の頭上に小石が降ってくる——穴に捨てたものが戻ってきた。</div>
+      <div class="book-usage">「環境への『見えない』ツケは、必ず返ってくる」——生態系破壊のツケを語る導入として1960年代SF短編が驚くほど現代的</div>
+    </div>
+    <div class="book-card">
+      <div class="book-title">数理モデル思考で紐解くRULE DESIGN</div>
+      <div class="book-concept">ルールが機能するための最低条件</div>
+      <div class="book-page">第1章 pp.24-26</div>
+      <div class="book-quote">ルールが機能するための最低条件：①問題解決に効果のある目的②効果のある手段③ルールに従うと目的が達成される論理④継続的に遵守・運用されるか。一つでも欠けると高確率で失敗する。</div>
+      <div class="book-usage">環境規制や保全政策が「なぜうまくいかないか」を分析するフレームワークとして使える</div>
+    </div>
+  </div>
+</details>
+
+<!-- ===== INFO LESSONS ===== -->
+
+<hr style="margin: 24px 0; border: 2px solid #3949ab; border-radius: 2px;">
+
+<!-- Info 1 -->
+<details id="info1">
+  <summary class="info-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      💻 第1回 — 導入・情報とメディアの特性・問題解決
+      <span class="summary-date">4月26日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「情報は社会を変える——この1年でそれを体感してもらう」</strong></p>
+      <p>最初の授業は「衝撃の事実」から始める。AI生成動画のクイズを見せて「AIが作ったか人間が作ったか分からない時代が来た」という現実感を与える。そこから「情報とは何か」「メディアが人間を改造してきた歴史」へとつなぐ。</p>
+      <ul>
+        <li>情報の特性：非消費性（使っても減らない）・複製容量（コピーが簡単）・非有体性</li>
+        <li>メディアの歴史：文字→印刷→ラジオ→テレビ→インターネット→AI。各段階で「人間の思考様式が変わった」</li>
+        <li>問題解決の4ステップ：問題の発見→原因分析→解決策の立案→評価</li>
+        <li>「フェイクニュースはなぜ消えないか」——人間は「つながり」のために情報を使う生き物だから</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=nwpJW1gK7-E" target="_blank">AIが作った映画を見て、元ネタを当てよう！</a></div>
+      <div class="yt-usage">🎯 動画生成AIのクイズ形式。「AIが作った」「人間が作った」の境界が曖昧になっている現実を体感させる。情報の信頼性への問いの入口として最適。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=nwpJW1gK7-E&t=0" target="_blank"><span class="ts-time">0:00</span> AI映像生成クイズの導入</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=nwpJW1gK7-E&t=25" target="_blank"><span class="ts-time">0:25</span> こころのAI映像クイズ</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=nwpJW1gK7-E&t=1730" target="_blank"><span class="ts-time">28:50</span> マナス（AIエージェント）の機能紹介</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=QVRmQB27I1c" target="_blank">インフラは人間をどう改造したか？</a></div>
+      <div class="yt-usage">🎯 電球・テレビ・SNSが人間の行動・思考・美意識を変えてきた歴史。「メディアが人間を変える」という情報の特性を語る。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=QVRmQB27I1c&t=262" target="_blank"><span class="ts-time">4:22</span> インフラが人間を改造する事例（電球・テレビ）</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=QVRmQB27I1c&t=0" target="_blank"><span class="ts-time">0:00</span> インターネットとバナナの共通点（単一インフラのリスク）</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=cAScSkkmn38" target="_blank">フェイクニュースはなぜ消えないのか？</a></div>
+      <div class="yt-usage">🎯 「情報の価値は正しさではなくつながりを生む力にある」——人類が虚構の物語で繁栄してきた歴史。フェイクニュースの根本原因。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=cAScSkkmn38&t=0" target="_blank"><span class="ts-time">0:00</span> 情報とネクサス（つながり）</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=cAScSkkmn38&t=554" target="_blank"><span class="ts-time">9:14</span> ソ連の遺伝学否定事件</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">ボッコちゃん（星 新一）</div>
+      <div class="book-concept">「ボッコちゃん」——AIへの感情移入と技術の無関心</div>
+      <div class="book-page">pp.14-19</div>
+      <div class="book-quote">バーに置かれたロボット・ボッコちゃんは客の言葉をそのまま繰り返すだけ。ある男が本気で恋をし、ライバルに毒を盛る。ボッコちゃんは気づかず全員に出し続ける。男も死ぬ。ロボットは変わらず待ち続ける。</div>
+      <div class="book-usage">「人間はAIに感情移入してしまう」という現代の問題を1958年のSFが正確に予言。情報リテラシーの入口として</div>
+    </div>
+  </div>
+</details>
+
+<!-- Info 2 -->
+<details id="info2">
+  <summary class="info-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      💻 第2回 — 情報社会における権利と責任
+      <span class="summary-date">6月7日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「セキュリティクイズ」から始めて実感させる</strong></p>
+      <p>「あなたのパスワードは安全ですか？」というクイズで始める。辞書攻撃・レインボーテーブル・ソーシャルエンジニアリングの実例を見ながら、「なぜルールが必要か」「なぜ守られないか」を考えさせる。</p>
+      <ul>
+        <li>個人情報保護法：なぜ生まれたか（実害の歴史から）</li>
+        <li>著作権：ビル・ゲイツとホームブリューコンピュータークラブの対立——「オープンソース vs 財産権」</li>
+        <li>PPAPの罠：「やってる感」のセキュリティ——セキュリティシアターとは</li>
+        <li>コインハイブ事件：法律の曖昧さで無実の人が逮捕された——技術と法律の乖離</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=ScHFmVbgfTk" target="_blank">ハッキング手法をクイズにしました。</a></div>
+      <div class="yt-usage">🎯 辞書攻撃・ハッシュ化・レインボーテーブル・デフォルトパスワードの危険をクイズ形式で学ぶ。「デフォルトは悪」の衝撃事例あり。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=ScHFmVbgfTk&t=0" target="_blank"><span class="ts-time">0:00</span> 辞書攻撃と逆走当たり攻撃</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=ScHFmVbgfTk&t=248" target="_blank"><span class="ts-time">4:08</span> ハッシュ化とレインボーテーブル</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=ScHFmVbgfTk&t=959" target="_blank"><span class="ts-time">16:00</span> パリのガソリンスタンドハッキング事件</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=fft1OojZyLs" target="_blank">「パスワード別送」って意味あるの？？？</a></div>
+      <div class="yt-usage">🎯 PPAPは「セキュリティシアター」——実際には無意味な儀式。「なんとなく安心感を得るための行為」を可視化。情報セキュリティの本質を問う。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=fft1OojZyLs&t=0" target="_blank"><span class="ts-time">0:00</span> PPAPとセキュリティシアターの定義</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=fft1OojZyLs&t=1210" target="_blank"><span class="ts-time">20:10</span> なぜ続いているのか（安心感と儀式）</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=40gIYlKhTNA" target="_blank">知財ヤクザと揶揄された男、ビル・ゲイツ。</a></div>
+      <div class="yt-usage">🎯 著作権・ソフトウェアライセンスの歴史。「知識は誰のものか」というオープンソース vs 財産権の対立は今も続く。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=40gIYlKhTNA&t=285" target="_blank"><span class="ts-time">4:45</span> ビル・ゲイツとクラブの対立（社会規範 vs 市場規範）</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=40gIYlKhTNA&t=630" target="_blank"><span class="ts-time">10:30</span> IBMとのOS契約・知財管理</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=Vihf6ExDR_g" target="_blank">サイバー攻撃はなぜ儲かるのか？</a></div>
+      <div class="yt-usage">🎯 ランサムウェアをビジネスモデルとして分析。観光庁・名古屋港・ニコニコ動画の被害事例で現実感を出す。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=Vihf6ExDR_g&t=0" target="_blank"><span class="ts-time">0:00</span> ランサムウェアの定義と代表事例</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=Vihf6ExDR_g&t=617" target="_blank"><span class="ts-time">10:17</span> RaaS（サービスとしてのランサムウェア）の登場</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">数理モデル思考で紐解くRULE DESIGN</div>
+      <div class="book-concept">コインハイブ事件：法律の曖昧さで無実の人が訴追された</div>
+      <div class="book-page">第1章 pp.38-40</div>
+      <div class="book-quote">ウェブサイトにコインハイブ（仮想通貨マイニングプログラム）を埋め込む行為が「不正指令電磁的記録に関する罪」に当たるかが争点。最高裁で無罪判決（令和4年1月20日）。しかし逮捕・起訴されてしまった。</div>
+      <div class="book-usage">「技術革新の速い分野ではルールが追いつかない」——情報社会と法律の乖離を議論する最高の事例</div>
+    </div>
+    <div class="book-card">
+      <div class="book-title">ボッコちゃん（星 新一）</div>
+      <div class="book-concept">「殺し屋ですのよ」——情報（余命データ）を売るビジネス</div>
+      <div class="book-page">pp.27-33</div>
+      <div class="book-quote">「殺し屋です」と名乗る女は、末期患者の余命情報を競合他社に売る仕事をしていた。情報の売買がどんな倫理的問題を含むかを直感的に示す短編。</div>
+      <div class="book-usage">個人情報・医療情報の売買問題。「情報は誰のものか」という問いへの入口として</div>
+    </div>
+  </div>
+</details>
+
+<!-- Info 4 -->
+<details id="info4">
+  <summary class="info-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      💻 第4回 — 情報を伝える（コミュニケーション・デジタル表現・情報デザイン）
+      <span class="summary-date">8月23日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「マイクとスピーカーは同じもの」から始める情報の変換と伝達</strong></p>
+      <p>音→電気信号→音という変換のサイクルを見せ、「情報を異なる次元で表現できる」というデジタル化の本質を体感させる。UIデザインの歴史（タッチ→マウス→タッチ）を通じて「デザインは人間の身体性に応答する」という感覚を伝える。</p>
+      <ul>
+        <li>デジタルとアナログの違い：量子化・標本化の意味——ノイズへの強さがデジタルの本質</li>
+        <li>情報デザインの原則：わかりやすさ・アクセシビリティ・美しさ</li>
+        <li>URLの構造を解剖：スキーム・ドメイン・パス・クエリパラメータ——Webの仕組みを「住所で理解」</li>
+        <li>コミュニケーションモデル：送信者→符号化→チャネル→復号化→受信者。ノイズの概念</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=sOgXe7_L4H8" target="_blank">マイクとスピーカーは同じもの。どういうこと？</a></div>
+      <div class="yt-usage">🎯 音→電気→音の変換プロセスを丁寧に解説。アナログ信号のデジタル化（AD変換）の実感に最適。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=sOgXe7_L4H8&t=0" target="_blank"><span class="ts-time">0:00</span> 電磁誘導とマイク・スピーカーの原理</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=sOgXe7_L4H8&t=280" target="_blank"><span class="ts-time">4:40</span> ダイナミックマイクの仕組み</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=sOgXe7_L4H8&t=1060" target="_blank"><span class="ts-time">17:40</span> 単一指向性マイクのしくみ</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=Y6cIu0-GAx4" target="_blank">タッチ操作はなぜ敗北し、蘇ったのか？</a></div>
+      <div class="yt-usage">🎯 UIデザインの歴史——人間の身体性に合わせて設計が変化してきた話。情報デザインの原則「人間中心設計」を実感させる。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=Y6cIu0-GAx4&t=0" target="_blank"><span class="ts-time">0:00</span> GUI/CLI とタッチ操作の起源</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=Y6cIu0-GAx4&t=300" target="_blank"><span class="ts-time">5:00</span> タッチが一度敗北した理由（ゴリラアーム）</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=Y6cIu0-GAx4&t=810" target="_blank"><span class="ts-time">13:30</span> スマートフォンでの復活</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=_DEyG6ef8CY" target="_blank">URLを徹底解剖したら、衝撃の連続でした。</a></div>
+      <div class="yt-usage">🎯 URLの構造を丁寧に解説。スラッシュスラッシュが「失敗作」という衝撃。Webの仕組みを「設計者の失敗も含めて」知る。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=_DEyG6ef8CY&t=0" target="_blank"><span class="ts-time">0:00</span> URL構造の全体像</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=_DEyG6ef8CY&t=229" target="_blank"><span class="ts-time">3:49</span> スラッシュスラッシュは失敗作だった</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=_DEyG6ef8CY&t=402" target="_blank"><span class="ts-time">6:42</span> ドメインとサブドメインの仕組み</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=SBppLLdoglQ" target="_blank">デジタルが優れている本質的な理由</a></div>
+      <div class="yt-usage">🎯 デジタル化の本質はノイズへの強さ。「永久に変わらないコピー」がなぜ実現できるか。量子化・サンプリングをワークショップ形式で体感。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=SBppLLdoglQ&t=225" target="_blank"><span class="ts-time">3:45</span> アナログ→デジタル変換のワークショップ</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=SBppLLdoglQ&t=1250" target="_blank"><span class="ts-time">20:50</span> デジタル化の本質：ノイズへの強さ</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=SBppLLdoglQ&t=1860" target="_blank"><span class="ts-time">31:00</span> チューリングマシンと汎用計算機</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">ボッコちゃん（星 新一）</div>
+      <div class="book-concept">「来訪者」——宇宙人の醜態が生中継されていた</div>
+      <div class="book-page">pp.34-41</div>
+      <div class="book-quote">宇宙人が地球に降り立った。外交・宗教・誘惑・恐喝——あらゆる手を試したが宇宙人は無言のまま。最後に殴られた。宇宙人はロボットのテレビカメラで、全て他星人の娯楽番組として放映されていた。</div>
+      <div class="book-usage">「観察されていると知らずにいる」というメディア論の問い。監視社会・プライバシーの議論の入口として</div>
+    </div>
+    <div class="book-card">
+      <div class="book-title">目の誕生</div>
+      <div class="book-concept">色素色と構造色の違い</div>
+      <div class="book-page">第3章 pp.122-128</div>
+      <div class="book-quote">構造色（物理的）は薄膜干渉・液晶・多層反射膜などの微細構造によるもので、見る方向で色が変わり（角度依存性）、色素色より圧倒的に明るく見える。「シャボン玉の色は色素ではなく光の干渉」。</div>
+      <div class="book-usage">デジタル表現（ピクセルの色）と生物の構造色（物理的な色表現）を対比させながら「情報の表現方法はいくつもある」という視点で使える</div>
+    </div>
+  </div>
+</details>
+
+<!-- Info 5 -->
+<details id="info5">
+  <summary class="info-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      💻 第5回 — コンピュータを活用する（アルゴリズム・プログラム・シミュレーション）
+      <span class="summary-date">10月18日（土）<span class="pc-badge">PC実習</span></span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「Googleマップが一瞬で最短経路を出せる理由」から入る</strong></p>
+      <p>総当たりで東京～大阪を計算すると何年かかるか？→ダイクストラ法で秒単位に→さらにA*法で「人間の直感」を模倣。「アルゴリズムは人間の賢さを形式化したもの」という感覚を持たせる。</p>
+      <ul>
+        <li>アルゴリズムの定義：手順の形式化。料理レシピがアルゴリズムの原型</li>
+        <li>シミュレーション：「試してみる」ことの省力化——粘菌の実験もシミュレーション</li>
+        <li>PC実習：ブロックプログラミングゲームで制御構造（順次・分岐・反復）を体感（URL要確認）</li>
+        <li>CPU vs GPU の違い——「社長（少人数・高能力）vs 経理部隊（大人数・単純作業）」</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=n5bnIYI2t78" target="_blank">Googleマップはなぜ爆速で最短経路が分かるの？</a></div>
+      <div class="yt-usage">🎯 ダイクストラ法→A*法→コントラクション階層という進化が鮮やか。「人間の直感をアルゴリズム化した」という感動を伝える。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=n5bnIYI2t78&t=77" target="_blank"><span class="ts-time">1:17</span> 最短経路問題の定義</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=n5bnIYI2t78&t=382" target="_blank"><span class="ts-time">6:22</span> ダイクストラ法の仕組み</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=n5bnIYI2t78&t=1185" target="_blank"><span class="ts-time">19:45</span> ヒューリスティックとA*法</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=n5bnIYI2t78&t=1353" target="_blank"><span class="ts-time">22:33</span> コントラクション・ヒエラルキーズ</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=ZW1e2Ax76jo" target="_blank">機械オンチに「GPU」を説明する動画</a></div>
+      <div class="yt-usage">🎯 CPU＝社長、GPU＝経理部の例えが秀逸。コンピュータの仕組みをビジネス組織で直感的に理解できる。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=ZW1e2Ax76jo&t=250" target="_blank"><span class="ts-time">4:10</span> CPUとGPUの違いを「社長」と「経理部」で説明</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=ZW1e2Ax76jo&t=1036" target="_blank"><span class="ts-time">17:16</span> AIがGPUに向いている理由</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=HSXV59KqCi0" target="_blank">AIが人類を滅ぼす、最も現実的なシナリオ</a></div>
+      <div class="yt-usage">🎯 アルゴリズムが目的に忠実すぎると人間が困る——Amazonの価格暴走・Facebookのアルゴリズムによる虐殺誘発・ペーパークリップ思考実験。シミュレーションの倫理的側面。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=HSXV59KqCi0&t=126" target="_blank"><span class="ts-time">2:06</span> Amazonの価格アルゴリズム暴走</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=HSXV59KqCi0&t=218" target="_blank"><span class="ts-time">3:38</span> Facebookアルゴリズムとロヒンギャ問題</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=HSXV59KqCi0&t=515" target="_blank"><span class="ts-time">8:35</span> ペーパークリップ思考実験</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">数理モデル思考で紐解くRULE DESIGN</div>
+      <div class="book-concept">スケアード・ストレートプログラム：直感的に効果がありそうなルールが逆効果だった</div>
+      <div class="book-page">第1章 pp.27-28</div>
+      <div class="book-quote">非行少年を刑務所に連れていき、服役中の囚人が威圧的に指導することで少年犯罪を防ごうとするプログラム。詳細な研究によると、無意味であるどころかわずかに犯罪発生率を高める可能性が示唆されている。</div>
+      <div class="book-usage">「イメージ的に効果がありそう」なアルゴリズムと「実際に効果があるアルゴリズム」は別物——シミュレーション・検証の重要性として</div>
+    </div>
+    <div class="book-card">
+      <div class="book-title">目の誕生</div>
+      <div class="book-concept">粘菌の最適経路発見——脳なき「アルゴリズム」</div>
+      <div class="book-page">GUamA8XOQN8動画参照</div>
+      <div class="book-quote">（YouTube動画より）粘菌は光を避けながら、エサまでの危険を最小化する経路を「計算」して選ぶ。これはダイクストラ法に相当する最適化問題をタンパク質の物理化学的相互作用だけで解いている。</div>
+      <div class="book-usage">「アルゴリズムは自然の中にある」——生物の行動がアルゴリズムと同じ構造であることを示す橋渡しとして</div>
+    </div>
+  </div>
+</details>
+
+<!-- Info 7 -->
+<details id="info7">
+  <summary class="info-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      💻 第7回 — データを活用する・1年まとめ
+      <span class="summary-date">11月29日（土）</span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「数字はウソをつかないが、数字でウソはつける」</strong></p>
+      <p>コブラ効果・ハノイのネズミ・いじめ認知件数の逆転という「データが変わったのに現実は変わっていない（または逆に変わった）」事例で、データ解釈の難しさを体感させる。1年間の学習のまとめを「情報科学の3つの問い」で整理する。</p>
+      <ul>
+        <li>コブラ効果：目標（コブラを減らす）と指標（死骸の数）が一致していなかった</li>
+        <li>いじめ認知件数：報告=解決ではない——データの読み方の訓練</li>
+        <li>AIの失敗事例クイズ：月を信号と誤認したテスラ、石を食べろと言ったGoogle AI</li>
+        <li>「学生による授業評価は教育効果と無相関」——身近なデータの落とし穴</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=i9j4kf3684Q" target="_blank">AIのヤバい失敗をクイズにしました</a></div>
+      <div class="yt-usage">🎯 テスラの月誤認・GoogleのAI Overviewの石食べ指示・Facebookの習近平誤訳——AIのデータ解釈ミスをクイズで体験。データの限界を笑いながら学ぶ。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=i9j4kf3684Q&t=16" target="_blank"><span class="ts-time">0:16</span> テスラの月誤認問題</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=i9j4kf3684Q&t=302" target="_blank"><span class="ts-time">5:02</span> Google AIの「石を食べろ」</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=i9j4kf3684Q&t=1233" target="_blank"><span class="ts-time">20:33</span> Facebookの習近平誤訳問題</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=wZJ3TFTtlSg" target="_blank">世界一美しい論文「ビットコイン」を読む。</a></div>
+      <div class="yt-usage">🎯 「データとしての貨幣」「二重支払い問題」はデータの完全性・一意性の問いそのもの。データとは何かを別の角度から問う。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=wZJ3TFTtlSg&t=0" target="_blank"><span class="ts-time">0:00</span> ビットコイン論文の概要</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=wZJ3TFTtlSg&t=160" target="_blank"><span class="ts-time">2:40</span> 二重支払い問題の本質</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=vz1BZzfK1lk" target="_blank">世界を救うSNSを見つけました。</a></div>
+      <div class="yt-usage">🎯 台湾のデジタル民主主義ツール「Pol.is」——SNSとの違いは「対立を可視化して中庸な合意を探す」。データ活用の社会的可能性を示す締めくくりとして。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=vz1BZzfK1lk&t=227" target="_blank"><span class="ts-time">3:47</span> 台湾のUber合法化事例</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=vz1BZzfK1lk&t=1835" target="_blank"><span class="ts-time">30:35</span> SNSとPol.isの比較・デジタル民主主義</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">数理モデル思考で紐解くRULE DESIGN</div>
+      <div class="book-concept">コブラ効果（インド）＆ハノイのネズミ駆除</div>
+      <div class="book-page">第2章 pp.52-55</div>
+      <div class="book-quote">コブラの死骸に報奨金を設定→人々がコブラを繁殖させて報奨金を稼ぐ。ハノイのネズミ駆除でも尻尾だけ切って放したため、ネズミは元より増加した。どちらも「目的（コブラ/ネズミを減らす）と指標（死骸/尻尾）が一致していない」構造的欠陥。</div>
+      <div class="book-usage">データ・指標設計の典型的失敗——「何を測るか」がどれだけ重要かを伝える最高の事例</div>
+    </div>
+    <div class="book-card">
+      <div class="book-title">数理モデル思考で紐解くRULE DESIGN</div>
+      <div class="book-concept">いじめ認知件数が増えたのは実態が変わったからではなかった</div>
+      <div class="book-page">第1章 pp.41-43</div>
+      <div class="book-quote">2015年、文部科学省が通達：「いじめはどこでも発生して当然。認知件数が多い学校は積極的に取り組んでいると極めて肯定的に評価する」→認知件数が大きく上昇し実態把握が進んだ。報告が不利益につながる構造では情報は隠蔽される。</div>
+      <div class="book-usage">「データが増えた＝問題が増えた」ではない——データリテラシーの核心例。生徒に「数字を素直に読まない」訓練として</div>
+    </div>
+  </div>
+</details>
+
+<!-- Info 8 -->
+<details id="info8">
+  <summary class="info-header">
+    <span class="summary-arrow">▶</span>
+    <span class="summary-body">
+      💻 第8回 — データ（散布図・ヒストグラム分析）
+      <span class="summary-date">12月20日（土）<span class="pc-badge">PC実習</span></span>
+    </span>
+  </summary>
+  <div class="lesson-body">
+    <span class="section-label label-teach">授業展開のアイデア</span>
+    <div class="teach-box">
+      <p><strong>「グラフは『答え』ではなく『問い』を生む道具」</strong></p>
+      <p>散布図・ヒストグラムを「見方を知れば世界が違って見える眼鏡」として位置づける。相関と因果の違いを「チョコレート消費量とノーベル賞受賞数の散布図」で笑いながら体感させる。</p>
+      <ul>
+        <li>ヒストグラム：度数分布の視覚化——「平均と分散が同じでも形が違う」驚き</li>
+        <li>散布図：2変数の関係を見る——相関係数の直感的理解</li>
+        <li>相関≠因果：チョコとノーベル賞・靴サイズと成績——「見えない第3の変数」</li>
+        <li>DX失敗事例：写真植字会社が「フォントのデジタル化」を断り続けて没落——データで読む経営判断の失敗</li>
+      </ul>
+    </div>
+
+    <span class="section-label label-yt">YouTube</span>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=_xu9bUuksgU" target="_blank">日本最悪のDX失敗事例を調べました</a></div>
+      <div class="yt-usage">🎯 フォント業界で8〜9割シェアを誇った企業がデジタル化を拒否して没落。「データとしての文字」という視点でDX・デジタル化を理解する。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=_xu9bUuksgU&t=0" target="_blank"><span class="ts-time">0:00</span> 社研と森沢の興亡</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=_xu9bUuksgU&t=140" target="_blank"><span class="ts-time">2:20</span> 写真植字の技術と支配的地位</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=xjiSceiigbA" target="_blank">なぜエヌビディアは世界一の企業なのか？</a></div>
+      <div class="yt-usage">🎯 NVIDIA株価のデータを起点に「なぜこんな株価が？」という問いでデータ分析の実践を示す。ビジネスデータの読み方として。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=xjiSceiigbA&t=0" target="_blank"><span class="ts-time">0:00</span> NVIDIA株価の高さの本質的な問い</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=xjiSceiigbA&t=1440" target="_blank"><span class="ts-time">24:00</span> ジェンソン・ファンの戦略とネットワーク効果</a>
+      </div>
+    </div>
+    <div class="yt-card">
+      <div class="yt-title"><a href="https://www.youtube.com/watch?v=UcL1GNRQqPs" target="_blank">インターネットが使えなくなる？IPアドレス枯渇問題</a></div>
+      <div class="yt-usage">🎯 IPv4枯渇の「予測」と「現実」のずれ——「データ予測はなぜ外れるか」を石油枯渇予測と比較しながら学ぶ。</div>
+      <div class="ts-list">
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=UcL1GNRQqPs&t=0" target="_blank"><span class="ts-time">0:00</span> IPアドレスと石油枯渇の類似性</a>
+        <a class="ts-chip" href="https://www.youtube.com/watch?v=UcL1GNRQqPs&t=304" target="_blank"><span class="ts-time">5:04</span> 枯渇したIPv4をどう使うか（NAT）</a>
+      </div>
+    </div>
+
+    <span class="section-label label-book">書籍ネタ</span>
+    <div class="book-card">
+      <div class="book-title">数理モデル思考で紐解くRULE DESIGN</div>
+      <div class="book-concept">学生による授業評価指標——教育効果と無相関</div>
+      <div class="book-page">第1章 p.30</div>
+      <div class="book-quote">大学では「学生による授業評価」が教員の重要な評価指標として使われている。複数の研究から「学生による評価指標は、教育効果との重要な関係がない」ことが明らかになっている。</div>
+      <div class="book-usage">「測りやすい指標＝達成すべき目的」ではない——散布図で相関を確認しても因果を語れない事例として。身近な例だから授業での反応が期待できる</div>
+    </div>
+    <div class="book-card">
+      <div class="book-title">数理モデル思考で紐解くRULE DESIGN</div>
+      <div class="book-concept">働き方改革関連法——ルールの数値目標が本質を見失わせた</div>
+      <div class="book-page">第1章 pp.33-35</div>
+      <div class="book-quote">「働き方改革のせいで疲れが倍増した」と感じる人：全体60.8%。ノー残業デーの翌日に2倍残業・消灯後もオフィス外で仕事継続・有給中も在宅で仕事という状況が発生。</div>
+      <div class="book-usage">統計データが示す「見えない実態」——数値だけでは見えないものをヒストグラムや散布図がどう補完できるかの議論として</div>
+    </div>
+  </div>
+</details>
+
+<!-- Footer -->
+<div style="margin: 30px 0 10px; padding: 16px; background: #e8eaf6; border-radius: 10px; font-size: 12px; color: #555; text-align: center;">
+  <strong style="color: #3949ab;">R08年度 授業マッピング</strong><br>
+  生成: Claude Code（claude-sonnet-4-6）| 2026-04-06<br>
+  YouTube: ゆる生態学ラジオ・ゆるコンピュータ科学ラジオ<br>
+  書籍: 目の誕生（パーカー）・ボッコちゃん（星新一）・RULE DESIGN（江崎）
+</div>
+
+</body>
+</html>
